@@ -1,5 +1,5 @@
 
-=begin
+=begin 
 This is my first Ruby program!
 It is a collection of useful data mining similarity metrics
 =end

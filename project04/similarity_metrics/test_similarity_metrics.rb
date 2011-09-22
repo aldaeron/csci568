@@ -1,7 +1,7 @@
 require_relative 'similarity_metrics'
 
 test1 = [0,0];
-test2 = [1,0];
+test2 = [1,0]; 
 test3 = [1,1];
 
 puts "Euclidian Distance: #{euclidian_distance(test1, test2).round(3)}"
