@@ -21,6 +21,7 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 	centroid = Hash.new
 	point_to_current_centroid_distance = Hash.new
 	points_current_cluster = Hash.new
+	points_last_cluster = Hash.new
 
 	centroid_running_sum = Hash.new
 	centroid_num_points = Hash.new
@@ -61,12 +62,16 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 		
 
 	iteration = 1
+	loop_flag = true
 
-	while (iteration <= max_iterations) do
+	while loop_flag do
 
+		puts iteration
 		puts centroid
 		puts " "
 		puts " "
+
+		
 
 		# Calculate the distance between each point and each centroid
 		for data_key in 0...data_size
@@ -112,9 +117,30 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 
 		
 
-		iteration += 1
+		
+		# Check and see if we should stop looping
+		if (iteration >= max_iterations) 
+			termination_condition = "Max Iterations"
+			loop_flag = false
+		elsif points_last_cluster == points_current_cluster
+			termination_condition = "Converged"
+			loop_flag = false
+		end
+
+		if loop_flag
+			# We will still be looping
+			# Increment the iteration
+			iteration += 1
+			# Keep track of which points belong to which cluster in the last iteration for convergence
+			points_last_cluster.update(points_current_cluster)
+		else
+			# We are done looping, calcluate metrics on each cluster and record the termination iteration
+			termination_iteration = iteration
+		end
 
 	end
+
+	puts "Loop terminated because '#{termination_condition}' on iteration #{termination_iteration}"
 
 end
 

@@ -36,7 +36,7 @@ for data_key,data_record in data_set_string
 end
 
 
-k_means(k, data_set, data_size, data_dimension, 0, 0, 0, 10)
+k_means(k, data_set, data_size, data_dimension, 0, 0, 0, 100)
 
 # For later for removing columns that we don't care about
 # For now do it manually
