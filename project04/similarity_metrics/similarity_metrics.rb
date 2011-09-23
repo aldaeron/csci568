@@ -90,7 +90,7 @@ def cosine_similarity(vector1, vector2)
 		exit
 	end
 	numerator = dot_product(vector1, vector2);
-	denominator = dot_product(vector1, vector1) * dot_product(vector2, vector2);
+	denominator = Math.sqrt(dot_product(vector1, vector1)) * Math.sqrt(dot_product(vector2, vector2))
 	if denominator.abs < 1e-12 
 		return 0
 	end
@@ -109,8 +109,7 @@ def pearsons_r(vector1, vector2)
 
 	# Using Equations from http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient	
 	# Yes, wikipedia is in fact the BEST SOURCE EVER
-	# The book uses one minus the value returned below for whatever reason
-	# I am using the values from my research code for now
+	
 	
 	sum12 = sum1 = sum11 = sum2 = sum22 = 0.0;
 	for i in 0...vector1.size
