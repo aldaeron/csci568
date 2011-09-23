@@ -1,4 +1,4 @@
-require_relative 'similarity_metrics'
+
 
 =begin
 CSCI Fall 2011 Project 5
@@ -16,6 +16,7 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 	
 	range_min = Hash.new
 	range_max = Hash.new
+	range = Hash.new
 
 	centroid = Hash.new
 	point_to_current_centroid_distance = Hash.new
@@ -50,9 +51,11 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 			end
 		end
 
+		range[dimension_key] = range_max[dimension_key] - range_min[dimension_key]
+
 		# Use the range to create a random starting point for the centroids
 		for cluster_key in 0...k
-			centroid[cluster_key][dimension_key] = range_min[dimension_key] + (range_max[dimension_key] - range_min[dimension_key])*rand()
+			centroid[cluster_key][dimension_key] = range_min[dimension_key] + range[dimension_key]*rand()
 		end
 	end
 		
@@ -68,7 +71,7 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 		# Calculate the distance between each point and each centroid
 		for data_key in 0...data_size
 			for cluster_key in 0...k
-				point_to_current_centroid_distance[data_key][cluster_key] = euclidian_distance(centroid[cluster_key],data_set[data_key])
+				point_to_current_centroid_distance[data_key][cluster_key] = range_normalized_euclidian_distance(centroid[cluster_key],data_set[data_key],range)
 			end
 		end
 
@@ -113,4 +116,35 @@ def k_means(k, data_set, data_size, data_dimension, stall_value, stall_type, sta
 
 	end
 
+end
+
+
+
+def range_normalized_euclidian_distance(point1, point2, range)
+	# START Error Checking
+	if !point1.length || !point2.length
+		at_exit { puts "Error: One or more vectors have length zero in function 'range_normalized_euclidian_distance'" }
+		exit
+	end
+	if (point1.length != point2.length)
+		at_exit { puts "Error: Points are not the same dimensional length in function 'range_normalized_euclidian_distance'" }
+		exit
+	end
+	if !range.length
+		at_exit { puts "Error: The range is not defined in function 'range_normalized_euclidian_distance'" }
+		exit
+	end
+	if (range.length != point1.length)
+		at_exit { puts "Error: The range is not the same dimensional length as the points in function 'range_normalized_euclidian_distance'" }
+		exit
+	end
+	# END Error Checking
+
+	# START algorithm implementation
+	running_sum = 0.0;
+	for i in 0...point1.size
+		running_sum += ((point1[i] - point2[i])/range[i]) ** 2
+	end
+	Math.sqrt(running_sum);
+	# END algorithm implementation
 end
