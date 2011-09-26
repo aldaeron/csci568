@@ -21,6 +21,8 @@ cluster_SSE_list = Hash.new
 cluster_SSB_list = Hash.new
 cluster_density_list = Hash.new
 
+output_file_pointer = File.open("test.txt", "w")
+
 
 
 data_title = iris_data_handle.readline.strip.split(",")
@@ -38,8 +40,6 @@ iris_data_handle.each {|line|
 
 
 data_dimension = data_type.size
-
-k = 3
 
 for data_key,data_record in data_set_string
 	dimension_key = 0
@@ -75,24 +75,34 @@ for dimension_key in 0...data_dimension
 end
 
 
-cluster_point_list, cluster_centroid_list, cluster_SSE_list, cluster_SSB_list, cluster_density_list, convergence_iteration, convergence_condition, convergence_info = k_means_normalized(k, normalized_data_set, data_size, data_dimension, 0, 0, 0, 100)
 
-puts "RUN:0"
-puts "K:#{k}"
-puts "CONVERGENCE-METHOD:#{}"
-puts "CONVERGENCE-ITERATION:#{}"
-puts "CONVERGENCE-INFO:#{}"
-for i in 0...k
-	puts "CLUSTER:#{i}"
-	for j in 0...cluster_point_list[i].length
-		puts "CLUSTER-POINT_LIST:#{cluster_point_list[i][j]}"
+
+for k in 3..6
+	for iteration in 0...128
+		cluster_point_list, cluster_centroid_list, cluster_SSE_list, cluster_SSB_list, cluster_density_list, convergence_iteration, convergence_condition, convergence_info = k_means_normalized(k, normalized_data_set, data_size, data_dimension, 0, 0, 0, 100)
+		# This is not "blocking" well, need to read more of the Ruby book
+		#for i in 0...k
+		#	for j in 0...data_dimension
+		#		cluster_centroid_list[i][j] = range_min[i] + (range[i]*cluster_centroid_list[i][j])
+		#	end
+		#end
+		output_file_pointer.puts "K:#{k}:RUN:#{iteration}"
+		output_file_pointer.puts "CONVERGENCE-METHOD:#{convergence_condition}"
+		output_file_pointer.puts "CONVERGENCE-ITERATION:#{convergence_iteration}"
+		output_file_pointer.puts "CONVERGENCE-INFO:#{convergence_info}"
+		for i in 0...k
+			output_file_pointer.puts "CLUSTER:#{i}"
+			for j in 0...cluster_point_list[i].length
+				output_file_pointer.puts "CLUSTER-POINT_LIST:#{cluster_point_list[i][j]}"
+			end
+			for j in 0...data_dimension
+				output_file_pointer.puts "CLUSTER-CENTROID_LIST:#{cluster_centroid_list[i][j]}"
+			end
+			output_file_pointer.puts "CLUSTER-SSE:#{cluster_SSE_list[i]}"
+			output_file_pointer.puts "CLUSTER-SSB:#{cluster_SSB_list[i]}"
+			output_file_pointer.puts "CLUSTER-Density:#{cluster_density_list[i]}"
+		end
 	end
-	for j in 0...data_dimension
-		puts "CLUSTER-CENTROID_LIST:#{range_min[i]+range[i]*cluster_centroid_list[i][j]}"
-	end
-	puts "CLUSTER-SSE:#{cluster_SSE_list[i]}"
-	puts "CLUSTER-SSB:#{cluster_SSB_list[i]}"
-	puts "CLUSTER-Demsity:#{cluster_density_list[i]}"
 end
 
 # For later for removing columns that we don't care about
