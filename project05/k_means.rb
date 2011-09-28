@@ -4,8 +4,8 @@
 CSCI Fall 2011 Project 5
 An implementation of the K-Means Clustering Algorithm
 Matt O'Neal
-Last Updated 2011-09-22
-All code contained in this document is original, except as indicated otherwiss
+Last Updated 2011-09-26
+All code contained in this document is original, except as indicated otherwise
 =end
 
 def k_means_normalized(k, data_set, data_size, data_dimension, stall_value, stall_type, stall_iterations, max_iterations)
@@ -60,6 +60,7 @@ def k_means_normalized(k, data_set, data_size, data_dimension, stall_value, stal
 	while loop_flag do
 
 
+# NAN Centroid CLUSTERS BLOW THIS UP ALGORITHM UP
 
 
 		# Calculate the distance between each point and each centroid
@@ -132,7 +133,11 @@ def k_means_normalized(k, data_set, data_size, data_dimension, stall_value, stal
 				# Empty cluster.  Re-randomize.  
 				# There are other ways to find a new centroid like picking a random point or choosing the farthest point from the existing centroid
 				# I have seen runs where there are 8 bad random location picks in a row so for now pick a rancom point to use instead of a random point.
-				centroid[cluster_key] = data_set[rand(data_size)]
+				# But using a random point is not working right.  Need to generate a random number then use it for the hash indicies.
+				#centroid[cluster_key] = data_set[rand(data_size)]  THIS IS A BAD WAY TO DO THIS.  NEED A HASH COPY (if it exists) or a single random number with is used as a hash index
+				for dimension_key in 0...data_dimension
+					centroid[cluster_key][dimension_key] = rand()
+				end
 				# Can't stop looping if there are empty clusters
 				loop_flag = true
 			end
@@ -179,7 +184,7 @@ def euclidian_distance_normalized(point1, point2)
 	for i in 0...point1.size
 		running_sum += ((point1[i] - point2[i])) ** 2
 	end
-	Math.sqrt(running_sum);
+	Math.sqrt(running_sum)
 	# END algorithm implementation
 end
 
@@ -197,6 +202,7 @@ def k_means_normalized_metrics(k, data_set, data_size, data_dimension, cluster_s
 		cluster_SSE[cluster_key] = 0.0
 		cluster_SSB[cluster_key] = Float::MAX
 		cluster_farthest_point[cluster_key] = 0.0
+
 		for cluster_data_key in 0...cluster_set_distance[cluster_key].length
 			cluster_SSE[cluster_key] += cluster_set_distance[cluster_key][cluster_data_key] ** 2
 			if(cluster_set_distance[cluster_key][cluster_data_key] > cluster_farthest_point[cluster_key])
@@ -212,7 +218,7 @@ def k_means_normalized_metrics(k, data_set, data_size, data_dimension, cluster_s
 			end
 		end
 		cluster_SSE[cluster_key] /= (2.0*cluster_set_distance[cluster_key].length)
-		cluster_density[cluster_key] = (3.14 * (cluster_farthest_point[cluster_key] ** 2)) / cluster_set_distance[cluster_key].length
+		cluster_density[cluster_key] = (Math::PI * (cluster_farthest_point[cluster_key] ** 2)) / cluster_set_distance[cluster_key].length
 	end
 
 	return cluster_SSE, cluster_SSB, cluster_density

@@ -77,8 +77,39 @@ end
 
 
 
-for k in 3..6
-	for iteration in 0...128
+
+k_min = 2;
+k_max = 9;
+iteration_max = 150;
+
+
+
+
+
+output_file_pointer.printf("START-DATA-SET\n")
+output_file_pointer.printf("NUM-DIMENSIONS:#{data_dimension}\n")
+output_file_pointer.printf("NUM-DATA-POINTS:#{data_size}\n")
+output_file_pointer.printf("K-MIN:#{k_min}\n")
+output_file_pointer.printf("K-MAX:#{k_max}\n")
+output_file_pointer.printf("ITERATION-MAX:#{iteration_max}\n")
+for data_key in 0...data_size
+	output_file_pointer.printf("DATA-POINT:#{data_key}:")
+	for dimension_key in 0...data_dimension
+		output_file_pointer.printf("#{data_set[data_key][dimension_key]},")
+	end
+	output_file_pointer.seek(-1, IO::SEEK_CUR) # Gets rid of the extra comma
+	output_file_pointer.printf("\n")
+end
+for dimension_key in 0...data_dimension
+	output_file_pointer.printf("DIMENSION-LABEL:#{dimension_key}:#{data_title[dimension_key]}\n")
+end
+output_file_pointer.printf("END-DATA-SET\n")
+
+# IS DENSITY CALCULATED CORRECTLY???  
+# DOES NOT USE RANGE, LOOKS IN NORMALIZED SPACE
+
+for k in k_min..k_max
+	for iteration in 0...iteration_max
 		cluster_point_list, cluster_centroid_list, cluster_SSE_list, cluster_SSB_list, cluster_density_list, convergence_iteration, convergence_condition, convergence_info = k_means_normalized(k, normalized_data_set, data_size, data_dimension, 0, 0, 0, 100)
 		# This is not "blocking" well, need to read more of the Ruby book
 		#for i in 0...k
@@ -86,22 +117,34 @@ for k in 3..6
 		#		cluster_centroid_list[i][j] = range_min[i] + (range[i]*cluster_centroid_list[i][j])
 		#	end
 		#end
-		output_file_pointer.puts "K:#{k}:RUN:#{iteration}"
-		output_file_pointer.puts "CONVERGENCE-METHOD:#{convergence_condition}"
-		output_file_pointer.puts "CONVERGENCE-ITERATION:#{convergence_iteration}"
-		output_file_pointer.puts "CONVERGENCE-INFO:#{convergence_info}"
+		output_file_pointer.printf("START-ITERATION\n")
+		output_file_pointer.printf("K:#{k}:ITERATION:#{iteration}\n")
+		output_file_pointer.printf("CONVERGENCE-METHOD:#{convergence_condition}\n")
+		output_file_pointer.printf("CONVERGENCE-ITERATION:#{convergence_iteration}\n")
+		output_file_pointer.printf("CONVERGENCE-INFO:#{convergence_info}\n")
 		for i in 0...k
-			output_file_pointer.puts "CLUSTER:#{i}"
+			output_file_pointer.printf("CLUSTER-START:#{i}\n")
+			output_file_pointer.printf("CLUSTER-POINT_LIST:")
 			for j in 0...cluster_point_list[i].length
-				output_file_pointer.puts "CLUSTER-POINT_LIST:#{cluster_point_list[i][j]}"
+				output_file_pointer.printf("#{cluster_point_list[i][j]},")
 			end
+			output_file_pointer.seek(-1, IO::SEEK_CUR) # Gets rid of the extra comma
+			output_file_pointer.printf("\n")
+
+			output_file_pointer.printf("CLUSTER-CENTROID_LIST:")
 			for j in 0...data_dimension
-				output_file_pointer.puts "CLUSTER-CENTROID_LIST:#{cluster_centroid_list[i][j]}"
+				output_file_pointer.printf("#{cluster_centroid_list[i][j]},")
 			end
-			output_file_pointer.puts "CLUSTER-SSE:#{cluster_SSE_list[i]}"
-			output_file_pointer.puts "CLUSTER-SSB:#{cluster_SSB_list[i]}"
-			output_file_pointer.puts "CLUSTER-Density:#{cluster_density_list[i]}"
+			output_file_pointer.seek(-1, IO::SEEK_CUR) # Gets rid of the extra comma
+			output_file_pointer.printf("\n")
+
+
+			output_file_pointer.printf("CLUSTER-SSE:#{cluster_SSE_list[i]}\n");
+			output_file_pointer.printf("CLUSTER-SSB:#{cluster_SSB_list[i]}\n");
+			output_file_pointer.printf("CLUSTER-Density:#{cluster_density_list[i]}\n");
+			output_file_pointer.printf("CLUSTER-END\n")
 		end
+		output_file_pointer.printf("END-ITERATION\n")
 	end
 end
 
