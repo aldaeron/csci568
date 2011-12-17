@@ -18,8 +18,13 @@
 <div class="container">
   <h1>Matt O'Neal's Data Mining Portfolio Fall 2011</h1>
   <h2>Similarity Metrics</h2>
-  <p class="introduction">Your description of this strategy in your own words. Be descriptive... history, algorithm/principles it is based on, types of datasets this strategy is meant for, what it does, how it does it, benefits and limitations, etc.</p>
   <p>Note: I just learned Ruby starting this semester.  Please be gentle with the comments.</p>
+  
+  <h2>Introduction</h2>
+  <p>When looking at Figure 1 below, which two people will look most similar standing side by side?  If you chose points 2 and 3 - you are correct.  But why those two?  Because points 2 and 3 are closest together on the graph.  This problem is a simple example of how to calculate similarity.  Now imagine a data set with ten million people, 20 data items per person and you are given one person and asked which person is most similar.  Similarity metrics are used to answer queries like these.  Depending on the type of data attribute in the data set, some metrics are more useful than others.  Understanding similarity metrics is also important for clustering algorithms.  In order to create clusters of similar items, a metric for how similar two items are must be know.  More discussion on clustering is <a href="clustering.html">here</a>.</p>  
+  <img src="images/distance.jpg"><br>
+  Figure 1: Distance Example<br><br>
+
   
   <h2>Euclidean Distance</h2> 
   <p>The euclidean distance metric is a measure of the square of the difference of two items.  This difference is summed in each dimension then the square of the whole sum is taken.  Figure 1 above is a good example of the Euclidian distance.  The distance between 2 and 3 is:</p>
