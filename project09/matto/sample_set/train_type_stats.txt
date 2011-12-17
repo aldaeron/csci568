@@ -1,0 +1,5 @@
+Track	7295
+Album	1391
+Artist	2487
+Genre	479
+Error	0
