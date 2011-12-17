@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head> 
-<title>NAME OF DATA MINING STRATEGY</title>
+<title>Association Analysis</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <meta name="author" content="" />
@@ -17,14 +17,13 @@
 <body>
 <div class="container">
   <h1>Matt O'Neal's Data Mining Portfolio Fall 2011</h1>
-  <h2>TITLE</h2>
-  <p class="introduction">Your description of this strategy in your own words. Be descriptive... history, algorithm/principles it is based on, types of datasets this strategy is meant for, what it does, how it does it, benefits and limitations, etc.</p>
-  <pre class="code">
-#
-# the python implementation here
-#
-#
-  </pre>
+  <h2>Association Analysis</h2>
+  <h2>Introduction</h2>
+  <p>Association analysis is the discovery of interesting relationships hidden in large data sets.  Typically these data sets are market basket data.  The result of the analysis is a set of rules in the form:</p.>
+  <p>(Itemset1) => (Itemset2)</p>
+  <p>Rather than calculate every permutation of itemsets to find good rules, frequent itemsets are generated first.  Non-frequent itemsets will have poor rule metrics.  Good rules are determined using two rule metrics: support and confidence.  Support is the number of times ItemSet1 AND ItemSet2 appear in the total number of records.  Confidence is the number of times ItemSet1 AND ItemSet2 appear compared to the number of times ItemSet1 appears by itself .  The heart of frequent itemset generation is the a priori principle which states that if an itemset is frequent then its subsets must also be frequent.  This means that if a set is infrequent, its supersets must also be infrequent.  Using this principle, infrequent small itemsets can be used to prune a lot of supersets in only a few steps.  There are two efficient methods to build frequent itemsets Fk-1 X Fk-1 and Fk-1 X Fk1.</p>
+
 </div>
+<a href="standardreferences.html">Standard References</a>
 </body>
 </html>
