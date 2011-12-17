@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head> 
-<title>NAME OF DATA MINING STRATEGY</title>
+<title>Similarity Metrics</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <meta name="author" content="" />
@@ -17,14 +17,121 @@
 <body>
 <div class="container">
   <h1>Matt O'Neal's Data Mining Portfolio Fall 2011</h1>
-  <h2>TITLE</h2>
+  <h2>Similarity Metrics</h2>
   <p class="introduction">Your description of this strategy in your own words. Be descriptive... history, algorithm/principles it is based on, types of datasets this strategy is meant for, what it does, how it does it, benefits and limitations, etc.</p>
+  <p>Note: I just learned Ruby starting this semester.  Please be gentle with the comments.</p>
+  
+  <h2>Euclidean Distance</h2> 
+  <p>The euclidean distance metric is a measure of the square of the difference of two items.  This difference is summed in each dimension then the square of the whole sum is taken.  Figure 1 above is a good example of the Euclidian distance.  The distance between 2 and 3 is:</p>
+  EuclideanDistance = SquareRoot{   (height(Point2) - height(Point3))^2     +     (weight(Point2) - weight(Point3))^2     }<br>
+  EuclideanDistance = SquareRoot {   (72 - 72)^2     +     (195 - 180)^2     }<br>
+  EuclideanDistance = SquareRoot {   (0)^2     +     (15)^2     }<br>
+  EuclideanDistance = 15<br>
+  <p>Euclidean distance is useful for data items that have non-binary numerical data.  </p>
+
+  
   <pre class="code">
-#
-# the python implementation here
-#
-#
+  def euclidian_distance(vector1, vector2)
+	  if !vector1.length || !vector2.length
+		at_exit { puts "Error: One or more vectors have length zero in function 'euclidian_distance'" }
+		exit
+	  end
+	  if (vector1.length != vector2.length)
+		at_exit { puts "Error: Vectors are not the same length in function 'euclidian_distance'" }
+		exit
+	  end
+	  running_sum = 0.0;
+	  for i in 0...vector1.size
+		running_sum += (vector1[i] - vector2[i]) ** 2
+	  end
+	  Math.sqrt(running_sum);
+  end
   </pre>
+  
+  <h2>Simple Matching Coefficient (SMC)</h2>
+  <p>The simple matching coefficient is a quick metric to calculate on binary data set.  SMC is easy to calculate - it is the number of columns where both data records are zero or one divided by the total number of columns.  It is important to note that categorical data can be transformed into binary data.</p>  
+  For example a data column for hair color where:<br>
+  b = brown, d = blonde, r = red and l = black <br>
+  can be transformed into: <br>
+  hair-brown? (true/false), hair-blonde? (true/false)  etc. <br>
+
+  
+  <pre class="code">
+  def SMC(vector1, vector2)
+	if !vector1.length || !vector2.length
+		at_exit { puts "Error: One or more vectors have length zero in function 'SMC'" }
+		exit
+	end
+	if (vector1.length != vector2.length)
+		at_exit { puts "Error: Vectors are not the same length in function 'SMC'" }
+		exit
+	end
+	numerator = 0.0;
+	for i in 0...vector1.size
+		if(vector1[i] == vector2[i])
+			numerator += 1;
+		end
+	end
+	(numerator / vector1.size)
+  end
+  </pre>
+
+  <h2>Jaccard</h2>
+  <p>The Jaccard metric is also binary data set and is very similar to SMC.  Jaccard is easy to calculate - it is the number of columns where both data records are one divided by the total number of columns.  This metric is useful for sparse binary data sets.  Since most of the columns are zero, the SMC will overstate the similarity of two items.  Market basket data sets are common sparse binary data set.  There are thousands of items in a grocery store, but a typical customer buys less than 100.  In this case we are interested in what items two customers buy not in what they do not buy.</p>
+
+  
+  <pre class="code">
+  def jaccard(vector1, vector2)
+	if !vector1.length || !vector2.length
+		at_exit { puts "Error: One or more vectors have length zero in function 'jaccard'" }
+		exit
+	end
+	if (vector1.length != vector2.length)
+		at_exit { puts "Error: Vectors are not the same length in function 'jaccard'" }
+		exit
+	end
+	numerator = 0.0;
+	denominator = 0.0;
+	for i in 0...vector1.size
+		if( (vector1[i] != 0) || (vector2[i] != 0) )
+			denominator += 1;
+			if(vector1[i] == vector2[i])
+				numerator += 1;
+			end
+		end
+	end
+	if denominator.abs < 1e-12 
+		return 0
+	end
+	(numerator / denominator)
+  end
+  </pre>
+
+  <h2>Cosine Similarity</h2>
+  <p>Cosine similarity differs from Euclidian distance, SMC and Jaccard in that it looks at sets of points instead of single points.  A common example is that a single user may rate 10 or 20 movies and we want to find similar users instead of individual movies.  Cosine similarity takes a 2 sets of points and returns a value for how similar the sets are.  This is very similar to the dot product of two vectors, which returns the angle between the vectors.  The smaller the angle - the closer the vectors are to each other.</p>
+
+  <pre class="code">
+  def cosine_similarity(vector1, vector2)
+	if !vector1.length || !vector2.length
+		at_exit { puts "Error: One or more vectors have length zero in function 'cosine_similarity'" }
+		exit
+	end
+	if (vector1.length != vector2.length)
+		at_exit { puts "Error: Vectors are not the same length in function 'cosine_similarity'" }
+		exit
+	end
+	numerator = dot_product(vector1, vector2);
+	denominator = Math.sqrt(dot_product(vector1, vector1)) * Math.sqrt(dot_product(vector2, vector2))
+	if denominator.abs < 1e-12 
+		return 0
+	end
+	(numerator / denominator)
+  end
+  </pre>
+  
+  
+
 </div>
+<a href="standardreferences.html">Standard References</a>
 </body>
 </html>
