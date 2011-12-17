@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head> 
-<title>NAME OF DATA MINING STRATEGY</title>
+<title>Clustering</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <meta name="author" content="" />
@@ -17,14 +17,39 @@
 <body>
 <div class="container">
   <h1>Matt O'Neal's Data Mining Portfolio Fall 2011</h1>
-  <h2>TITLE</h2>
-  <p class="introduction">Your description of this strategy in your own words. Be descriptive... history, algorithm/principles it is based on, types of datasets this strategy is meant for, what it does, how it does it, benefits and limitations, etc.</p>
-  <pre class="code">
-#
-# the python implementation here
-#
-#
-  </pre>
+  <h2>Clustering</h2>
+<h2>Introduction</h2>
+<p>On <a href="similarity.html">this page</a> there was discussion regarding how to calculate how similar two items are using a variety of metrics depending on the data attribute type.  The primary reason to develop similarity metrics is to use them to create groupings of similar items.  In data mining terms we call these grouping clusters.  The value of identifying these clusters of similar items depends on the domain of the data.  If an electronics store can figure out that men between 37 and 41 will buy a new TV if they are sent a 15% off coupon in the mail, the store may be able to increase profits by raising their prices on popular accessories.</p>
+<h2>Agglomerative Hierarchical Clustering </h2>
+<p>Agglomerative Hierarchical Clustering is a clustering algorithm where all data points are slowly agglomerated into one giant cluster.  The useful value this algorithm is the steps taken to form one large cluster from N data points.  The user must examine the clusters on each step of the algorithm using metrics like density and sum squared error (SSE) on each cluster and stopping when these metrics are optimal.  The stopping condition for obtaining the ideal clusters is very dependant on the data domain.  Agglomerative clustering algorithms are robust to noise and outliers, but can make choices in the early iterations that prevent ideal solutions from being reached later.  Nearby clusters can be joined unnecessarily and difficult to extract when examining the iteration data.  Combined with the uncertainty of which step yields ideal clusters make this algorithm difficult to use.</p>
+<p>Images coming when Photoshop and/or Visio decide to cooperate.</p>
+Pseudo Code:<br>
+Step 1: Create N clusters where N is the number of data points and each cluster centroid is at a data point.<br>
+Step 2: Using an appropriate similarity metric, merge the clusters with the closest centroids.  Keep track of all clusters on each algorithm iteration (centroid, what points belong to each cluster, etc)<br>
+Step 3: Repeat Step 2 until there is only 1 cluster left <br>
+Step 4: Return cluster data for each iteration of the algorithm<br>
+<h2>K-Means</h2>
+<p>K-Means is a clustering algorithm where the number of clusters is chosen beforehand and data points are assigned to clusters until the cluster centroids converge.  Since the starting location of each centroid is random, two consecutive runs with the same K value can yield different results.  It is recommended that many runs are completed for each K value to obtain the ideal clusters.  There are many theories about the ideal K value to use, but these appear to be inaccurate or very domain specific.  A "intelligent" brute force approach may be the best way to find the ideal K.  This approach should examine cluster metrics like cluster density, separation and SSE to determine the ideal K.  Struggles with non-uniform clusters (i.e. circles in 2D, spheres in 3D)</p>
+Pseudo Code:<br>
+Step 1: Create K clusters where K is a value chosen by the user. Randomly assign the centroid locations for each cluster.<br>
+Step 2: Assign each data point to the closest centroid using an appropriate similarity metric. <br>
+Step 3: Re-calculate the centroid of each cluster based on which points are currently assigned to it<br>
+Step 4: Repeat Steps 2 and 3 unless no points changed centroids on the last iteration.  Other stopping criteria can be used to prevent infinite loops when progress stalls<br>
+Step 5: Return the cluster centroids and which points belong to each centroid<br>
+<h2>DBSCAN</h2> 
+<p>Great at removing noise.  Great at non-uniform shapes.  Struggles with regions of varying density.
+Pseudo Code:<br>
+Step 1: Choose a value RADIUS (AKA epsilon) and MIN_POINTS.<br>
+Step 2: Label all points as core, edge or noise points.  Core points have MIN_POINTS within a distance of RADIUS of them using an appropriate similarity metric.  Edge points have at least one core point within a distance of RADIUS of them using an appropriate similarity metric.  Noise points are the remainder of the points.<br>
+Step 3: Exclude all noise points<br>
+Step 4: Start a cluster at a random unused core point.<br>
+Step 5: Expand a core point by searching for all points within RADIUS of the core point.  Add core points to the cluster and the search/expand list.  Add edge points to the cluster.<br>
+Step 6: Repeat Step 5 until the search/expand list is empty then close that cluster.  Repeat Step 4 if there are still unused core points.<br>
+Step 7: Return the set of clusters.<br>
+
+<p>It is worth noting that all three classic clustering algorithms have parameters which can be difficult to optimize.  This limits the effectiveness of clustering algorithms.</p>
+
 </div>
+<a href="standardreferences.html">Standard References</a>
 </body>
 </html>
